@@ -1,0 +1,131 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+class FlightBookingApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Flight Ticket Booking")
+        self.master.geometry("800x600")
+        self.master.configure(bg="#E6E6FA")  # Lilac color
+
+        screen_width = self.master.winfo_screenwidth()
+        screen_height = self.master.winfo_screenheight()
+        x = (screen_width / 2) - (800 / 2)
+        y = (screen_height / 2) - (600 / 2)
+        self.master.geometry(f'800x600+{int(x)}+{int(y)}')
+
+        self.destination_var = tk.StringVar()
+        self.date_var = tk.StringVar()
+        self.departure_var = tk.StringVar()
+        self.passenger_name_var = tk.StringVar()
+        self.passenger_ic_var = tk.StringVar()
+        self.passenger_email_var = tk.StringVar()
+        self.passenger_phone_var = tk.StringVar()
+        self.passenger_age_var = tk.StringVar()
+        self.class_var = tk.StringVar()
+        self.payment_var = tk.StringVar()
+
+        self.destinations = ["New York", "Los Angeles", "Chicago", "Miami", "San Francisco"]
+        self.dates = ["2023-01-01", "2023-02-01", "2023-03-01", "2023-04-01", "2023-05-01"]
+        self.departures = ["London", "Paris", "Berlin", "Rome", "Madrid"]
+        self.prices = {"Economy": 500, "Business": 1000, "First Class": 1500}
+
+        frame = ttk.Frame(master, padding="20", style="My.TFrame")
+        frame.grid(row=0, column=0, sticky="nsew")
+
+        ttk.Label(frame, text="Destination:").grid(row=0, column=0, pady=(5, 5), padx=(5, 0), sticky="e")
+        ttk.Label(frame, text="Date:").grid(row=1, column=0, pady=(5, 5), padx=(5, 0), sticky="e")
+        ttk.Label(frame, text="Departure:").grid(row=0, column=2, pady=(5, 5), padx=(5, 0), sticky="e")
+        ttk.Label(frame, text="Passenger Name:").grid(row=2, column=0, pady=(5, 5), padx=(5, 0), sticky="e")
+        ttk.Label(frame, text="Passenger IC:").grid(row=3, column=0, pady=(5, 5), padx=(5, 0), sticky="e")
+        ttk.Label(frame, text="Passenger Email:").grid(row=4, column=0, pady=(5, 5), padx=(5, 0), sticky="e")
+        ttk.Label(frame, text="Passenger Phone:").grid(row=5, column=0, pady=(5, 5), padx=(5, 0), sticky="e")
+        ttk.Label(frame, text="Passenger Age:").grid(row=6, column=0, pady=(5, 5), padx=(5, 0), sticky="e")
+        ttk.Label(frame, text="Class:").grid(row=7, column=0, pady=(5, 5), padx=(5, 0), sticky="e")
+        ttk.Label(frame, text="Payment Method:").grid(row=8, column=0, pady=(5, 5), padx=(5, 0), sticky="e")
+
+        self.destination_menu = ttk.Combobox(frame, textvariable=self.destination_var, values=self.destinations, state="readonly")
+        self.date_menu = ttk.Combobox(frame, textvariable=self.date_var, values=self.dates, state="readonly")
+        self.departure_menu = ttk.Combobox(frame, textvariable=self.departure_var, values=self.departures, state="readonly")
+
+        entry_passenger_name = ttk.Entry(frame, textvariable=self.passenger_name_var)
+        entry_passenger_ic = ttk.Entry(frame, textvariable=self.passenger_ic_var)
+        entry_passenger_email = ttk.Entry(frame, textvariable=self.passenger_email_var)
+        entry_passenger_phone = ttk.Entry(frame, textvariable=self.passenger_phone_var)
+        entry_passenger_age = ttk.Entry(frame, textvariable=self.passenger_age_var)
+
+        class_menu = ttk.Combobox(frame, textvariable=self.class_var, values=["Economy", "Business", "First Class"], state="readonly")
+        payment_menu = ttk.Combobox(frame, textvariable=self.payment_var, values=["Cash", "Online Transfer", "Credit/Debit"], state="readonly")
+
+        self.destination_menu.grid(row=0, column=1, pady=(5, 5), padx=(0, 5), sticky="w")
+        self.date_menu.grid(row=1, column=1, pady=(5, 5), padx=(0, 5), sticky="w")
+        self.departure_menu.grid(row=0, column=3, pady=(5, 5), padx=(0, 5), sticky="w")
+        entry_passenger_name.grid(row=2, column=1, pady=(5, 5), padx=(0, 5), sticky="w")
+        entry_passenger_ic.grid(row=3, column=1, pady=(5, 5), padx=(0, 5), sticky="w")
+        entry_passenger_email.grid(row=4, column=1, pady=(5, 5), padx=(0, 5), sticky="w")
+        entry_passenger_phone.grid(row=5, column=1, pady=(5, 5), padx=(0, 5), sticky="w")
+        entry_passenger_age.grid(row=6, column=1, pady=(5, 5), padx=(0, 5), sticky="w")
+        class_menu.grid(row=7, column=1, pady=(5, 5), padx=(0, 5), sticky="w")
+        payment_menu.grid(row=8, column=1, pady=(5, 5), padx=(0, 5), sticky="w")
+
+        ttk.Button(frame, text="Book Flight", command=self.book_flight).grid(row=9, column=0, columnspan=4, pady=10, sticky="nsew")
+        ttk.Button(frame, text="Save", command=self.save_data).grid(row=10, column=0, pady=10, sticky="nsew")
+        ttk.Button(frame, text="Reset", command=self.reset_data).grid(row=10, column=1, pady=10, sticky="nsew")
+        ttk.Button(frame, text="Update", command=self.update_data).grid(row=11, column=0, pady=10, sticky="nsew")
+        ttk.Button(frame, text="Exit", command=self.master.destroy).grid(row=11, column=1, pady=10, sticky="nsew")
+
+        for child in frame.winfo_children():
+            child.grid_configure(pady=5, padx=5)
+
+        frame.grid(row=0, column=0, sticky="nsew")
+        self.master.grid_columnconfigure(0, weight=1)
+        self.master.grid_rowconfigure(0, weight=1)
+
+        for child in frame.winfo_children():
+            if isinstance(child, ttk.Button):
+                child.grid_configure(pady=5, padx=5)
+
+        self.master.style = ttk.Style()
+        self.master.style.configure("My.TFrame", background="#E6E6FA", borderwidth=5)
+
+    def book_flight(self):
+        destination = self.destination_var.get()
+        date = self.date_var.get()
+        departure = self.departure_var.get()
+        passenger_name = self.passenger_name_var.get()
+        passenger_ic = self.passenger_ic_var.get()
+        passenger_email = self.passenger_email_var.get()
+        passenger_phone = self.passenger_phone_var.get()
+        passenger_age = self.passenger_age_var.get()
+        flight_class = self.class_var.get()
+        payment_method = self.payment_var.get()
+
+        if all([destination, date, departure, passenger_name, passenger_ic, passenger_email, passenger_phone, passenger_age, flight_class, payment_method]):
+            price = self.prices.get(flight_class, 0)
+            messagebox.showinfo("Booking Successful", f"Flight booked successfully!\nPrice: ${price}")
+        else:
+            messagebox.showwarning("Incomplete Information", "Please fill in all the details.")
+
+    def save_data(self):
+        # Implement your save data logic here
+        pass
+
+    def reset_data(self):
+        self.destination_menu.set('')
+        self.date_menu.set('')
+        self.departure_menu.set('')
+        self.passenger_name_var.set('')
+        self.passenger_ic_var.set('')
+        self.passenger_email_var.set('')
+        self.passenger_phone_var.set('')
+        self.passenger_age_var.set('')
+        self.class_var.set('')
+        self.payment_var.set('')
+
+    def update_data(self):
+        pass
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = FlightBookingApp(root)
+    root.mainloop()
